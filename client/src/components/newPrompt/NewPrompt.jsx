@@ -3,6 +3,7 @@ import "./newPrompt.css"
 import Upload from "../upload/Upload";
 import { IKImage } from "imagekitio-react";
 import model from "../../lib/gemini";
+import Markdown from 'react-markdown';
 
 const NewPromt = () => {
 
@@ -22,7 +23,7 @@ const NewPromt = () => {
 
     useEffect(() => {
         endRef.current.scrollIntoView({behavior: "smooth"})
-    },[]);
+    },[que, ans, img.dbData]);
 
 
 
@@ -58,7 +59,7 @@ const NewPromt = () => {
            />
         )}
         {que && <div className="message user">{que}</div>}
-        {ans && <div className="message">{ans}</div>}
+        {ans && <div className="message"><Markdown>{ans}</Markdown></div>}
          <div className="endChat" ref={endRef}></div>
             <form className="newForm" onSubmit={handleSubmit}>
                 <Upload setImg={setImg}/>
