@@ -11,7 +11,8 @@ const NewPromt = () => {
     const[img, setImg] = useState({
         isLoading: false,
         error: "",
-        dbData: {}
+        dbData: {},
+        aiData: {}
     })
 
     const[que, setQue] = useState('');
@@ -31,10 +32,16 @@ const NewPromt = () => {
     const add = async(text) => {
         setQue(text);
 
-        const result = await model.generateContent(text);
+        const result = await model.generateContent(Object.entries(img.aiData).length ? [img.aiData, text] : [text]);
         const response = await result.response;
         setAns(response.text());
-        console.log(text)
+        console.log(text);
+        setImg({
+            isLoading: false,
+            error: "",
+            dbData: {},
+            aiData: {}
+        })
     }
 
     const handleSubmit = async(e) => {
