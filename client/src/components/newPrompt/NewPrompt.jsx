@@ -18,6 +18,19 @@ const NewPromt = () => {
     const[que, setQue] = useState('');
     const[ans, setAns] = useState('');
 
+    const chat = model.startChat({
+        history: [
+          {
+            role: "user",
+            parts: [{ text: "Hello" }],
+          },
+          {
+            role: "model",
+            parts: [{ text: "Great to meet you. What would you like to know?" }],
+          },
+        ],
+      });
+
 
 
     const endRef = useRef(null);
@@ -32,9 +45,15 @@ const NewPromt = () => {
     const add = async(text) => {
         setQue(text);
 
-        const result = await model.generateContent(Object.entries(img.aiData).length ? [img.aiData, text] : [text]);
-        const response = await result.response;
-        setAns(response.text());
+        const result = await chat.sendMessageStream(Object.entries(img.aiData).length ? [img.aiData, text] : [text]);
+        let accumulatedText = '';
+        for await (const chunk of result.stream){
+            const chunkText = chunk.text();
+            console.log(chunkText);
+            accumulatedText += chunkText;4
+            setAns(accumulatedText);
+        }
+       
         console.log(text);
         setImg({
             isLoading: false,
